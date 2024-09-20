@@ -24,6 +24,7 @@ class UserController extends AbstractController
         $user = new User();
 
         $user->setEmail($data['email']);
+        $user->setUsername($data['username']);
         $user->setCourse($data['course']);
         $user->setInstitution($data['institution']);
 
