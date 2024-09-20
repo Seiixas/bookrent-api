@@ -21,9 +21,19 @@ class BookController extends AbstractController
 {
     #[Route('/books', name: 'books_list', methods: ['GET'])]
     public function index(Request $request, BookRepository $bookRepository, PaginatorInterface $paginator): JsonResponse
-    {   
+    {
+        $data = $request->query->all();
+
+        $filter = new BookFilter();
+
+        $filter->setTitle($data['title'] ?? null);
+        $filter->setIsbn($data['isbn'] ?? null);
+        $filter->setCategory($data['category'] ?? null);
+        $filter->setAuthor($data['author'] ?? null);
+        $filter->setPublicationYear(isset($data['publication_year']) ? new \DateTime($data['publication_year']) : null);
+
         $pagination = $paginator->paginate(
-            $bookRepository->findAll(),
+            $bookRepository->findByFilter($filter),
             $request->query->getInt('page', 1),
             10
         );

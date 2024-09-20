@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Book;
+use App\Entity\Filter\BookFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -30,6 +31,35 @@ class BookRepository extends ServiceEntityRepository
         $book->setUpdatedAt(new \DateTimeImmutable());
         
         $this->save($book);
+    }
+
+    public function findByFilter(BookFilter $filter)
+    {
+        $queryBuilder = $this->createQueryBuilder('b');
+
+        $queryBuilder->andWhere('b.enabled = true');
+
+        if ($filter->getIsbn()) {
+            $queryBuilder->andWhere('b.isbn LIKE :isbn')
+                ->setParameter('isbn', "%".$filter->getIsbn()."%");
+        }
+
+        if ($filter->getTitle()) {
+            $queryBuilder->andWhere('b.title LIKE :title')
+                ->setParameter('title', "%".$filter->getTitle()."%");
+        }
+
+        if ($filter->getCategory()) {
+            $queryBuilder->andWhere('b.category LIKE :category')
+                ->setParameter('category', "%".$filter->getCategory()."%");
+        }
+
+        if ($filter->getPublicationYear()) {
+            $queryBuilder->andWhere('b.publication_year = :publication_year')
+                ->setParameter('publication_year', $filter->getPublicationYear()->format('Y-m-d'));
+        }
+
+        return $queryBuilder->getQuery();
     }
 
 //    /**

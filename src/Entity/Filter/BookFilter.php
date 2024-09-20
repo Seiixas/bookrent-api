@@ -27,7 +27,7 @@ class BookFilter
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(?string $title): static
     {
         $this->title = $title;
 
@@ -39,7 +39,7 @@ class BookFilter
         return $this->isbn;
     }
 
-    public function setIsbn(string $isbn): static
+    public function setIsbn(?string $isbn): static
     {
         $this->isbn = $isbn;
 
@@ -63,7 +63,7 @@ class BookFilter
         return $this->author;
     }
 
-    public function setAuthor(string $author): static
+    public function setAuthor(?string $author): static
     {
         $this->author = $author;
 
@@ -75,7 +75,7 @@ class BookFilter
         return $this->publication_year;
     }
 
-    public function setPublicationYear(\DateTimeInterface $publication_year): static
+    public function setPublicationYear(?\DateTimeInterface $publication_year): static
     {
         $this->publication_year = $publication_year;
 
