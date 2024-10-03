@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  database:
+    image: postgres
+    container_name: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=!ChangeMe!
+      - POSTGRES_DB=app
+    volumes:
+      - pgdata:/data/postgres
+    tty: true
+    networks:
+      - symfony_net
+
+  app:
+    container_name: app
+    entrypoint: bash -c "wait-for database:5432 -t 40 -- symfony serve:start"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+    tty: true
+    depends_on:
+      - database
+    networks:
+      - symfony_net
+
+networks:
+  symfony_net:
+    driver: bridge
+
+volumes:
+  pgdata:
+    driver: local
