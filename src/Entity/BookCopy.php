@@ -16,13 +16,19 @@ class BookCopy
 
     #[ORM\ManyToOne(inversedBy: 'bookCopies')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['default'])]
     private ?Book $book = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookCopies')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['default'])]
     private ?User $owner = null;
+
+    #[ORM\Column]
+    private ?bool $rented = null;
+
+    public function __construct()
+    {
+        $this->rented = false;
+    }
 
     public function getId(): ?int
     {
@@ -49,6 +55,18 @@ class BookCopy
     public function setOwner(?User $owner): static
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function isRented(): ?bool
+    {
+        return $this->rented;
+    }
+
+    public function setRented(bool $rented): static
+    {
+        $this->rented = $rented;
 
         return $this;
     }

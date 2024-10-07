@@ -16,7 +16,7 @@ class Rent
 
     #[ORM\ManyToOne(inversedBy: 'rents')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Book $bookCopy = null;
+    private ?BookCopy $bookCopy = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $rent_date = null;
@@ -41,17 +41,24 @@ class Rent
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
+    public function __construct()
+    {
+        $this->enabled = true;
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getBookCopy(): ?Book
+    public function getBookCopy(): ?BookCopy
     {
         return $this->bookCopy;
     }
 
-    public function setBookCopy(?Book $bookCopy): static
+    public function setBookCopy(?BookCopy $bookCopy): static
     {
         $this->bookCopy = $bookCopy;
 

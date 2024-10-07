@@ -73,16 +73,16 @@ class BookController extends AbstractController
         $book->setCategory($data['category']);
         $book->setAuthor($data['author']);
         $book->setPublicationYear(new \DateTime($data['publication_year']));
+        $book->setCreatedBy($this->getUser());
 
         $bookRepository->save($book);
 
-        // $bookCopy = new BookCopy();
-        // $user = $userRepository->find(2);
+        $bookCopy = new BookCopy();
 
-        // $bookCopy->setBook($book);
-        // $bookCopy->setOwner($user);
+        $bookCopy->setBook($book);
+        $bookCopy->setOwner($this->getUser());
 
-        // $bookCopyRepository->save($bookCopy);
+        $bookCopyRepository->save($bookCopy);
 
         return $this->json([
             'message' => 'Book created successfuly!'

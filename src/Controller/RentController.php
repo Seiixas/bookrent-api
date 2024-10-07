@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\BookCopy;
 use App\Entity\Rent;
 use App\Repository\RentRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -45,18 +46,24 @@ class RentController extends AbstractController
     }
 
 
-    #[Route('/rents', name: 'rents_create', methods: ['POST'])]
-    public function create(Request $request, RentRepository $rentRepository): JsonResponse
+    #[Route('/rents/{bookCopy}', name: 'rents_create', methods: ['POST'])]
+    public function create(Request $request, BookCopy $bookCopy, RentRepository $rentRepository): JsonResponse
     {
+        if ($bookCopy->isRented()) {
+            return $this->json('Não é possível alugar esse livro!', Response::HTTP_NOT_FOUND);
+        }
+
         $data = $request->request->all();
 
         $rent = new Rent();
 
-        $rent->setLenderUser($data['lender_user']);
-        $rent->setReceptorUser($data['receptor_user']);
-        $rent->setRentDate(new \DateTime($data['rent_date']));
+        $rent->setLenderUser($bookCopy->getOwner());
+        $rent->setReceptorUser($this->getUser());
+        $rent->setRentDate(new \DateTime('now'));
         $rent->setReturnDate(new \DateTime($data['return_date']));
-        $rent->setBookCopy($data['book_copy']);
+        $rent->setBookCopy($bookCopy);
+
+        $bookCopy->setRented(true);
 
         $rentRepository->save($rent);
 
@@ -65,30 +72,30 @@ class RentController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
-    #[Route('/rents/{id}', name: 'rents_update', methods: ['PUT'])]
-    public function update(int $id, Request $request, RentRepository $rentRepository): JsonResponse
-    {
-        $data = $request->request->all();
-        $rent = $rentRepository
-            ->findOneBy(['id' => $id, 'enabled' => true]);
+    // #[Route('/rents/{id}', name: 'rents_update', methods: ['PUT'])]
+    // public function update(int $id, Request $request, RentRepository $rentRepository): JsonResponse
+    // {
+    //     $data = $request->request->all();
+    //     $rent = $rentRepository
+    //         ->findOneBy(['id' => $id, 'enabled' => true]);
 
-        if (!$rent) {
-            return $this->json('Aluguel não encontrado!', Response::HTTP_NOT_FOUND);
-        }
+    //     if (!$rent) {
+    //         return $this->json('Aluguel não encontrado!', Response::HTTP_NOT_FOUND);
+    //     }
 
-        $rent->setLenderUser($data['lender_user']);
-        $rent->setReceptorUser($data['receptor_user']);
-        $rent->setRentDate(new \DateTime($data['rent_date']));
-        $rent->setReturnDate(new \DateTime($data['return_date']));
-        $rent->setBookCopy($data['book_copy']);
-        $rent->setUpdatedAt(new \DateTimeImmutable());
+    //     $rent->setLenderUser($data['lender_user']);
+    //     $rent->setReceptorUser($data['receptor_user']);
+    //     $rent->setRentDate(new \DateTime($data['rent_date']));
+    //     $rent->setReturnDate(new \DateTime($data['return_date']));
+    //     $rent->setBookCopy($data['book_copy']);
+    //     $rent->setUpdatedAt(new \DateTimeImmutable());
 
-        $rentRepository->save($rent);
+    //     $rentRepository->save($rent);
 
-        return $this->json([
-            'message' => 'Book updated successfuly!'
-        ], 201);
-    }
+    //     return $this->json([
+    //         'message' => 'Book updated successfuly!'
+    //     ], 201);
+    // }
 
     #[Route('/rents/{id}', name: 'rents_delete', methods: ['DELETE'])]
     public function delete(int $id, Request $request, RentRepository $rentRepository): JsonResponse

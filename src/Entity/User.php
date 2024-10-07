@@ -35,19 +35,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    /**
-     * @var Collection<int, BookCopy>
-     */
-    #[ORM\OneToMany(targetEntity: BookCopy::class, mappedBy: 'owner')]
-    #[Groups(['user_detail'])]
+    // /**
+    //  * @var Collection<int, BookCopy>
+    //  */
+    // #[ORM\OneToMany(targetEntity: BookCopy::class, mappedBy: 'owner')]
+    // #[Groups(['user_detail'])]
     
-    private Collection $bookCopies;
+    // private Collection $bookCopies;
 
-    /**
-     * @var Collection<int, Rent>
-     */
-    #[ORM\OneToMany(targetEntity: Rent::class, mappedBy: 'lender_user')]
-    private Collection $rents;
+    // /**
+    //  * @var Collection<int, Rent>
+    //  */
+    // #[ORM\OneToMany(targetEntity: Rent::class, mappedBy: 'lender_user')]
+    // private Collection $rents;
 
     #[ORM\Column(length: 255)]
     private ?string $course = null;
@@ -58,10 +58,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
+    // /**
+    //  * @var Collection<int, Book>
+    //  */
+    // #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'created_by')]
+    // private Collection $books;
+
     public function __construct()
     {
-        $this->bookCopies = new ArrayCollection();
-        $this->rents = new ArrayCollection();
+        // $this->bookCopies = new ArrayCollection();
+        // $this->rents = new ArrayCollection();
+        // $this->books = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -139,65 +146,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection<int, BookCopy>
-     */
-    public function getBookCopies(): Collection
-    {
-        return $this->bookCopies;
-    }
+    // /**
+    //  * @return Collection<int, BookCopy>
+    //  */
+    // public function getBookCopies(): Collection
+    // {
+    //     return $this->bookCopies;
+    // }
 
-    public function addBookCopy(BookCopy $bookCopy): static
-    {
-        if (!$this->bookCopies->contains($bookCopy)) {
-            $this->bookCopies->add($bookCopy);
-            $bookCopy->setOwner($this);
-        }
+    // public function addBookCopy(BookCopy $bookCopy): static
+    // {
+    //     if (!$this->bookCopies->contains($bookCopy)) {
+    //         $this->bookCopies->add($bookCopy);
+    //         $bookCopy->setOwner($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeBookCopy(BookCopy $bookCopy): static
-    {
-        if ($this->bookCopies->removeElement($bookCopy)) {
-            // set the owning side to null (unless already changed)
-            if ($bookCopy->getOwner() === $this) {
-                $bookCopy->setOwner(null);
-            }
-        }
+    // public function removeBookCopy(BookCopy $bookCopy): static
+    // {
+    //     if ($this->bookCopies->removeElement($bookCopy)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($bookCopy->getOwner() === $this) {
+    //             $bookCopy->setOwner(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    /**
-     * @return Collection<int, Rent>
-     */
-    public function getRents(): Collection
-    {
-        return $this->rents;
-    }
+    // /**
+    //  * @return Collection<int, Rent>
+    //  */
+    // public function getRents(): Collection
+    // {
+    //     return $this->rents;
+    // }
 
-    public function addRent(Rent $rent): static
-    {
-        if (!$this->rents->contains($rent)) {
-            $this->rents->add($rent);
-            $rent->setLenderUser($this);
-        }
+    // public function addRent(Rent $rent): static
+    // {
+    //     if (!$this->rents->contains($rent)) {
+    //         $this->rents->add($rent);
+    //         $rent->setLenderUser($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeRent(Rent $rent): static
-    {
-        if ($this->rents->removeElement($rent)) {
-            // set the owning side to null (unless already changed)
-            if ($rent->getLenderUser() === $this) {
-                $rent->setLenderUser(null);
-            }
-        }
+    // public function removeRent(Rent $rent): static
+    // {
+    //     if ($this->rents->removeElement($rent)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($rent->getLenderUser() === $this) {
+    //             $rent->setLenderUser(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getCourse(): ?string
     {
@@ -223,15 +230,45 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getUsername(): ?string
+    public function getFullName(): ?string
     {
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setFullName(string $username): static
     {
         $this->username = $username;
 
         return $this;
     }
+
+    // /**
+    //  * @return Collection<int, Book>
+    //  */
+    // public function getBooks(): Collection
+    // {
+    //     return $this->books;
+    // }
+
+    // public function addBook(Book $book): static
+    // {
+    //     if (!$this->books->contains($book)) {
+    //         $this->books->add($book);
+    //         $book->setCreatedBy($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeBook(Book $book): static
+    // {
+    //     if ($this->books->removeElement($book)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($book->getCreatedBy() === $this) {
+    //             $book->setCreatedBy(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
 }

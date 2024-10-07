@@ -24,7 +24,7 @@ class UserController extends AbstractController
         $user = new User();
 
         $user->setEmail($data['email']);
-        $user->setUsername($data['username']);
+        $user->setFullName($data['username']);
         $user->setCourse($data['course']);
         $user->setInstitution($data['institution']);
 
@@ -35,7 +35,6 @@ class UserController extends AbstractController
 
         $em->persist($user);
         $em->flush();
-
 
         return $this->json([
             'message' => 'User created successfuly!'

@@ -26,7 +26,7 @@ class BookCopyController extends AbstractController
             'items' => $pagination->getItems(),
             'current_page' => $pagination->getCurrentPageNumber(),
             'total_items' => $pagination->getTotalItemCount(),
-        ], Response::HTTP_OK,['groups' => ['default']]);
+        ], Response::HTTP_OK);
     }
 
 

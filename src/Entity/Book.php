@@ -42,26 +42,30 @@ class Book
     #[ORM\Column]
     private ?bool $enabled = null;
 
-    /**
-     * @var Collection<int, BookCopy>
-     */
-    #[ORM\OneToMany(targetEntity: BookCopy::class, mappedBy: 'book')]
-    #[Groups(['default'])]
-    private Collection $bookCopies;
+    // /**
+    //  * @var Collection<int, BookCopy>
+    //  */
+    // #[ORM\OneToMany(targetEntity: BookCopy::class, mappedBy: 'book')]
+    // #[Groups(['book'])]
+    // private Collection $bookCopies;
 
-    /**
-     * @var Collection<int, Rent>
-     */
-    #[ORM\OneToMany(targetEntity: Rent::class, mappedBy: 'bookCopy')]
-    private Collection $rents;
+    // /**
+    //  * @var Collection<int, Rent>
+    //  */
+    // #[ORM\OneToMany(targetEntity: Rent::class, mappedBy: 'bookCopy')]
+    // private Collection $rents;
+
+    #[ORM\ManyToOne(inversedBy: 'books')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $created_by = null;
 
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
         $this->updated_at = new \DateTimeImmutable();
         $this->enabled = true;
-        $this->bookCopies = new ArrayCollection();
-        $this->rents = new ArrayCollection();
+        // $this->bookCopies = new ArrayCollection();
+        // $this->rents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -165,62 +169,74 @@ class Book
         return $this;
     }
 
-    /**
-     * @return Collection<int, BookCopy>
-     */
-    public function getBookCopies(): Collection
+    // /**
+    //  * @return Collection<int, BookCopy>
+    //  */
+    // public function getBookCopies(): Collection
+    // {
+    //     return $this->bookCopies;
+    // }
+
+    // public function addBookCopy(BookCopy $bookCopy): static
+    // {
+    //     if (!$this->bookCopies->contains($bookCopy)) {
+    //         $this->bookCopies->add($bookCopy);
+    //         $bookCopy->setBook($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeBookCopy(BookCopy $bookCopy): static
+    // {
+    //     if ($this->bookCopies->removeElement($bookCopy)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($bookCopy->getBook() === $this) {
+    //             $bookCopy->setBook(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
+
+    // /**
+    //  * @return Collection<int, Rent>
+    //  */
+    // public function getRents(): Collection
+    // {
+    //     return $this->rents;
+    // }
+
+    // public function addRent(Rent $rent): static
+    // {
+    //     if (!$this->rents->contains($rent)) {
+    //         $this->rents->add($rent);
+    //         $rent->setBookCopy($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeRent(Rent $rent): static
+    // {
+    //     if ($this->rents->removeElement($rent)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($rent->getBookCopy() === $this) {
+    //             $rent->setBookCopy(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
+
+    public function getCreatedBy(): ?User
     {
-        return $this->bookCopies;
+        return $this->created_by;
     }
 
-    public function addBookCopy(BookCopy $bookCopy): static
+    public function setCreatedBy(?User $created_by): static
     {
-        if (!$this->bookCopies->contains($bookCopy)) {
-            $this->bookCopies->add($bookCopy);
-            $bookCopy->setBook($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBookCopy(BookCopy $bookCopy): static
-    {
-        if ($this->bookCopies->removeElement($bookCopy)) {
-            // set the owning side to null (unless already changed)
-            if ($bookCopy->getBook() === $this) {
-                $bookCopy->setBook(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Rent>
-     */
-    public function getRents(): Collection
-    {
-        return $this->rents;
-    }
-
-    public function addRent(Rent $rent): static
-    {
-        if (!$this->rents->contains($rent)) {
-            $this->rents->add($rent);
-            $rent->setBookCopy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRent(Rent $rent): static
-    {
-        if ($this->rents->removeElement($rent)) {
-            // set the owning side to null (unless already changed)
-            if ($rent->getBookCopy() === $this) {
-                $rent->setBookCopy(null);
-            }
-        }
+        $this->created_by = $created_by;
 
         return $this;
     }
